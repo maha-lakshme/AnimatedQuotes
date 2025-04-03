@@ -1,0 +1,51 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <!-- Declare a variable for VideoQuoteItem -->
+        <variable
+            name="item"
+            type="com.maha.animatedquotes.ui.view.VideoQuoteItem" />
+    </data>
+    <!-- Use a FrameLayout to overlay text on top of the video player -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <!-- ExoPlayer PlayerView to play video -->
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/playerView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:background="#000000"
+            app:use_controller="false"
+
+           />
+
+
+        <!-- Quote text centered -->
+        <TextView
+            android:id="@+id/tvQuote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:background="#80000000"
+            android:text="@{item.quote.quote }"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <!-- Quote author at the bottom center -->
+        <TextView
+            android:id="@+id/tvAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:padding="8dp"
+            android:background="#80000000"
+            android:text="@{item.quote.author}"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </FrameLayout>
+</layout>

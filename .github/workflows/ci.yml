@@ -1,4 +1,5 @@
 name: CI Pipeline
+
 on:
   workflow_dispatch: # Allows manual triggering from the Actions tab
   push:
@@ -11,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       # Step 1: Checkout repository code
+      # Step 1: Checkout repository code
       - name: Checkout Code
         uses: actions/checkout@v3
 
       # Step 2: Set up Java Development Kit (JDK) with Java 17
-      - name: Set up JDk
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: temurin
@@ -32,20 +33,18 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+            
 
-        # Step 4: Build and Run Unit Tests
+      # Step 4: Build and Run Unit Tests
       - name: Build and Run Unit Tests
         run: ./gradlew clean test
 
-        # Step 5: Archive Unit Test Results
-      - name:  Archive Unit Test Results
-        uses:  actions/upload-artifact@v3
+      - name: List Test Reports Directory
+        run: ls -la app/build/reports/tests/testDebugUnitTest
+
+      # Step 5: Archive Unit Test Results
+      - name: Archive Unit Test Results
+        uses: actions/upload-artifact@v3.3.0
         with:
-         name: unit-test-report
-         path: app/build/reports/tests/testDebugUnitTest
-
-
-
-
-
-
+          name: unit-test-report
+          path: app/build/reports/tests/testDebugUnitTest

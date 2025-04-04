@@ -22,7 +22,7 @@ open class ContentRepository(
                 sdFile?.let {
                     Video(
                         id = videoResponse.id.toString(),
-                        title = videoResponse.title,
+                        title = videoResponse.url,
                         video_files = videoResponse.video_files,// You can map to title as needed
                         url = sdFile.link // Use the SD-quality video file's link
                     )

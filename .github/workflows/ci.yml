@@ -1,25 +1,28 @@
 name: CI Pipeline
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual triggering from the Actions tab
   push:
-    branches: [master]
+    branches: [master]  # Automatically triggers on pushes to the master branch
   pull_request:
-    branches: [master]
+    branches: [master] # Automatically triggers on pull requests targeting the master branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+       # Step 1: Checkout repository code
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      # Step 2: Set up Java Development Kit (JDK) with Java 17
       - name: Set up JDk
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: '17'
 
+      # Step 3: Cache Gradle Dependencies
       - name: Cache Gradle Dependencies
         uses: actions/cache@v3
         with:
@@ -30,5 +33,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+        # Step 4: Build and Run Unit Tests
       - name: Build and Run Unit Tests
         run: ./gradlew clean test
+
+        # Step 5: Archive Unit Test Results
+      - name: Archive unit test results
+        uses: actions/upload-artifact@v3
+        with:
+         name: unit-test-report
+         path: app/build/test-results/
+
+
+
+

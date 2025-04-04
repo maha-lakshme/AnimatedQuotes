@@ -38,11 +38,12 @@ jobs:
         run: ./gradlew clean test
 
         # Step 5: Archive Unit Test Results
-      - name: Archive unit test results
-        uses: actions/upload-artifact@v3
+      - name:  Archive Unit Test Results
+        uses:  actions/upload-artifact@v3
         with:
          name: unit-test-report
          path: app/build/test-results/
+
 
 
 

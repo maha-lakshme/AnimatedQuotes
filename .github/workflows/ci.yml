@@ -42,7 +42,8 @@ jobs:
         uses:  actions/upload-artifact@v3
         with:
          name: unit-test-report
-         path: app/build/test-results/
+         path: app/build/reports/tests/testDebugUnitTest
+
 
 
 

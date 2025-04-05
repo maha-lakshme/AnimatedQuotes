@@ -53,4 +53,31 @@ class QuotesServicesIntegrationTest {
         assertEquals("Shiva",quoteRsponse[0].author)
 
     }
+    @Test
+    fun `getMultipleRandomQuotes returns the expected number of quotes`() = runBlocking {
+        // Arrange
+        val fakeResponseQuotes = listOf(Quote("1","Everyday is oppurtinuty","Shiva",150),
+            Quote("2","work harder","ganesh",150),
+            Quote("3","believe in yourself","murugan",150))
+        val jsonResponse = Gson().toJson(fakeResponseQuotes)
+
+        // Enqueue a MockResponse with status 200 and the JSON body
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setBody(jsonResponse)
+        )
+
+        // Act: Call the Retrofit service method with a count parameter of 3
+        val response = quotesService.getMultipleRandomQuotes(3)
+
+        // Assert
+        assertNotNull(response)
+        assertEquals("The response should contain 3 quotes", 3, response.size)
+        assertEquals("Everyday is oppurtinuty", response[0].quote)
+        assertEquals("Shiva", response[0].author)
+        // Optionally add additional assertions for other items:
+        assertEquals("work harder", response[1].quote)
+        assertEquals("ganesh", response[1].author)
+    }
 }

@@ -33,7 +33,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-            
+          
 
       # Step 4: Build and Run Unit Tests
       - name: Build and Run Unit Tests
@@ -48,3 +48,15 @@ jobs:
         with:
           name: unit-test-report
           path: app/build/reports/tests/testDebugUnitTest
+
+      # Step 6: Build and run Espresso Test
+      - name: Build and Run Instrumented Test (Espresso)
+        run: ./gradlew connectedAndroidTest
+
+      # Step 7: Archive Espresso Test
+      - name: Archive Instrumented Test Results
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: instrumented-test-reports
+          path: app/build/reports/androidTests/connected
+

@@ -18,34 +18,39 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_gravity="center"
+            app:surface_type="texture_view"
             android:background="#000000"
             app:use_controller="false"
 
            />
+        <!-- Overlay container with Quote and Author -->
+        <LinearLayout
+            android:id="@+id/overlay_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:elevation="5dp"
+            android:background="@android:color/transparent">
 
+            <TextView
+                android:id="@+id/tvQuote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Quote"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:background="#80000000"
+                android:padding="8dp" />
 
-        <!-- Quote text centered -->
-        <TextView
-            android:id="@+id/tvQuote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            android:background="#80000000"
-            android:text="@{item.quote.quote }"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <!-- Quote author at the bottom center -->
-        <TextView
-            android:id="@+id/tvAuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:padding="8dp"
-            android:background="#80000000"
-            android:text="@{item.quote.author}"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Author"
+                android:textColor="#FFFFFF"
+                android:background="#80000000"
+                android:padding="6dp" />
+        </LinearLayout>
     </FrameLayout>
 </layout>

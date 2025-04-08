@@ -6,6 +6,7 @@ import com.maha.animatedquotes.data.model.Video
 import com.maha.animatedquotes.data.remote.PexelsService
 import com.maha.animatedquotes.data.remote.QuotesService
 import com.maha.animatedquotes.ui.view.OpenForTesting
+import com.maha.animatedquotes.util.EspressoIdlingResource
 
 @OpenForTesting
 open class ContentRepository(
@@ -15,6 +16,8 @@ open class ContentRepository(
     var lastErrorCode: Int? = null
 
     suspend fun fetchVideos(query: String): List<Video> {
+        //For UI testing
+        EspressoIdlingResource.increment() // Start of asynchronous operation
         return try {
             val response = pexelsService.searchVideos(query)
             response.videos.mapNotNull { videoResponse ->
@@ -30,26 +33,38 @@ open class ContentRepository(
             }
         } catch (e: Exception) {
             emptyList() // Return an empty list in case of errors
+        }finally {
+            EspressoIdlingResource.decrement()  // End of asynchronous operation
         }
     }
 
     suspend fun fetchQuotes(): List<Quote> {
+        //For UI testing
+        EspressoIdlingResource.increment() // Start of asynchronous operation
         return try {
             quotesService.getMultipleRandomQuotes(20)
 
         } catch (e: Exception) {
             emptyList()
+        }finally {
+            EspressoIdlingResource.decrement()  // End of asynchronous operation
         }
     }
     suspend fun fetQuotesByRange():List<Quote>{
+        //For UI testing
+        EspressoIdlingResource.increment() // Start of asynchronous operation
         return try {
             quotesService.getQuoteByLength(20,130,30)
         }catch (e:Exception){
             emptyList()
+        }finally {
+            EspressoIdlingResource.decrement()  // End of asynchronous operation
         }
     }
 
     suspend fun fecthQuotesByAuthor(author:String):List<Quote>{
+        //For UI testing
+        EspressoIdlingResource.increment() // Start of asynchronous operation
         return try {
             lastErrorCode = null
             quotesService.getQuoteByAuthor(author) ?: emptyList()
@@ -59,6 +74,8 @@ open class ContentRepository(
             emptyList()
         }catch (e:Exception){
             emptyList()
+        }finally {
+            EspressoIdlingResource.decrement()  // End of asynchronous operation
         }
     }
 }

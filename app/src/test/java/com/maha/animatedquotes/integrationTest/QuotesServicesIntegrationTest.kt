@@ -13,8 +13,10 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.test.assertFailsWith
 
 class QuotesServicesIntegrationTest {
     private lateinit var mockWebServer: MockWebServer
@@ -79,5 +81,18 @@ class QuotesServicesIntegrationTest {
         // Optionally add additional assertions for other items:
         assertEquals("work harder", response[1].quote)
         assertEquals("ganesh", response[1].author)
+    }
+    @Test
+    fun `getMultipleRandomQuotes throws exception when retrofit receives network error` ()= runBlocking {
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(500).setBody("Internal server error"))
+            // Act & Assert: Verify that calling the service method throws an HttpException.
+            val exception = assertFailsWith<HttpException> {
+                quotesService.getMultipleRandomQuotes(3)
+            }
+
+        // Optionally, verify that the HTTP status code in the exception is 500
+        assertEquals(500, exception.code())
+
     }
 }

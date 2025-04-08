@@ -54,9 +54,9 @@ jobs:
         run: ./gradlew connectedAndroidTest
 
       # Step 7: Archive Espresso Test
-      - name: Archive Instrumented Test Results
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: instrumented-test-reports
-          path: app/build/reports/androidTests/connected
+#      - name: Archive Instrumented Test Results
+#        uses: actions/upload-artifact@v4.6.2
+#        with:
+#          name: instrumented-test-reports
+#          path: app/build/reports/androidTests/connected
 

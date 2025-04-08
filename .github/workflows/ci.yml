@@ -61,6 +61,9 @@ jobs:
           target: 'default'          # Use the default system image target
           emulator-options: '-no-window -gpu swiftshader_indirect'
           script: ./gradlew connectedAndroidTest
+
+      - name: Terminate Emulator
+        run: adb -s emulator-5554 emu kill || echo "Emulator is not running"
       # Step 7: Archive Espresso Test
 #      - name: Archive Instrumented Test Results
 #        uses: actions/upload-artifact@v4.6.2

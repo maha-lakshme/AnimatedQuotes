@@ -62,20 +62,20 @@ jobs:
           emulator-options: '-no-window -gpu swiftshader_indirect'
           script: ./gradlew connectedAndroidTest
 
-      - name: Terminate Emulator
-        run: |
-          if adb devices | grep -q "emulator-5554"; then
-            echo "Emulator found. Terminating..."
-            adb -s emulator-5554 emu kill || echo "Termination command failed, but continuing."
-          else
-            echo "Emulator not found. Skipping termination."
-          fi
-
-
-      # Step 7: Archive Espresso Test
-      - name: Archive Instrumented Test Results
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: instrumented-test-reports
-          path: app/build/reports/androidTests/connected
+#      - name: Terminate Emulator
+#        run: |
+#          if adb devices | grep -q "emulator-5554"; then
+#            echo "Emulator found. Terminating..."
+#            adb -s emulator-5554 emu kill || echo "Termination command failed, but continuing."
+#          else
+#            echo "Emulator not found. Skipping termination."
+#          fi
+#
+#
+#      # Step 7: Archive Espresso Test
+#      - name: Archive Instrumented Test Results
+#        uses: actions/upload-artifact@v4.6.2
+#        with:
+#          name: instrumented-test-reports
+#          path: app/build/reports/androidTests/connected
 

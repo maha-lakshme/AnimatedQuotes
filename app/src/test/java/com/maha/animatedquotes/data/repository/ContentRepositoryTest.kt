@@ -14,11 +14,15 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.robolectric.RobolectricTestRunner
 import retrofit2.HttpException
 import retrofit2.Response
 
 
+
+@RunWith(RobolectricTestRunner::class)
 class ContentRepositoryTest {
     private lateinit var pexelsService: PexelsService
     private lateinit var quotesServices:QuotesService

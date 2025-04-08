@@ -63,7 +63,7 @@ jobs:
           script: ./gradlew connectedAndroidTest
 
       - name: Terminate Emulator
-        run: adb -s emulator-5554 emu kill || echo "Emulator is not running"
+        run: adb -s emulator-5554 emu kill || true
       # Step 7: Archive Espresso Test
 #      - name: Archive Instrumented Test Results
 #        uses: actions/upload-artifact@v4.6.2

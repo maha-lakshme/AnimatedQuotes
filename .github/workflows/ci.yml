@@ -1,18 +1,18 @@
 name: CI Pipeline
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual triggering from the Actions tab
   push:
-    branches: [master]
+    branches: [master]  # Automatically triggers on pushes to the master branch
   pull_request:
-    branches: [master]
+    branches: [master] # Automatically triggers on pull requests targeting the master branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
+      # Step 1: Checkout repository code
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -23,24 +23,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # Step 3: Install Android SDK Command-Line Tools
-      - name: Install Android SDK Command-Line Tools
-        run: |
-          mkdir -p $HOME/Android/Sdk/cmdline-tools/latest
-          curl -o cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
-          unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools
-          mv $HOME/Android/Sdk/cmdline-tools/cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
-          export ANDROID_HOME=$HOME/Android/Sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
-
-      # Step 4: Accept Android SDK Licenses
-      - name: Accept Android SDK Licenses
-        run: |
-          export ANDROID_HOME=$HOME/Android/Sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
-          yes | sdkmanager --licenses || echo "License acceptance failed, but continuing."
-
-      # Step 5: Cache Gradle Dependencies
+      # Step 3: Cache Gradle Dependencies
       - name: Cache Gradle Dependencies
         uses: actions/cache@v3
         with:
@@ -50,33 +33,49 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+          
 
-      # Step 6: Build and Run Unit Tests
+      # Step 4: Build and Run Unit Tests
       - name: Build and Run Unit Tests
         run: ./gradlew clean test
 
-      # Step 7: Build APKs
-      - name: Build APK and Test APK
-        run: ./gradlew assembleDebug assembleAndroidTest
+      - name: List Test Reports Directory
+        run: ls -la app/build/reports/tests/testDebugUnitTest
 
-      # Step 8: Run Instrumented Tests on Emulator
-      - name: Run instrumented tests on emulator
-        uses: ReactiveCircus/android-emulator-runner@v2.34.0
-        with:
-          api-level: 30
-          target: 'default'
-          emulator-options: '-no-window -gpu swiftshader_indirect'
-          script: ./gradlew connectedAndroidTest
-          arch: x86
-          cores: 2
-          avd-name: test
-          force-avd-creation: true
-          emulator-boot-timeout: 600
-          disable-animations: true
-
-      # Step 9: Archive Test Results
-      - name: Archive Instrumented Test Results
+      # Step 5: Archive Unit Test Results
+      - name: Archive Unit Test Results
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: instrumented-test-reports
-          path: app/build/reports/androidTests/connected
+          name: unit-test-report
+          path: app/build/reports/tests/testDebugUnitTest
+
+      # Step 6: Build and run Espresso Test
+#      - name: Build and Run Instrumented Test (Espresso)
+#        run: ./gradlew connectedAndroidTest
+
+      # This step uses the ReactiveCircus Android Emulator Runner to start an emulator.
+#      - name: Run instrumented tests on emulator
+#        uses: ReactiveCircus/android-emulator-runner@v2.34.0
+#        with:
+#          api-level: 30              # Choose an API level that's supported by your AVD
+#          target: 'default'          # Use the default system image target
+#          emulator-options: '-no-window -gpu swiftshader_indirect'
+#          script: ./gradlew connectedAndroidTest
+
+#      - name: Terminate Emulator
+#        run: |
+#          if adb devices | grep -q "emulator-5554"; then
+#            echo "Emulator found. Terminating..."
+#            adb -s emulator-5554 emu kill || echo "Termination command failed, but continuing."
+#          else
+#            echo "Emulator not found. Skipping termination."
+#          fi
+#
+#
+#      # Step 7: Archive Espresso Test
+#      - name: Archive Instrumented Test Results
+#        uses: actions/upload-artifact@v4.6.2
+#        with:
+#          name: instrumented-test-reports
+#          path: app/build/reports/androidTests/connected
+

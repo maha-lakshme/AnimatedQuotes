@@ -30,19 +30,17 @@ jobs:
           curl -o cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
           unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools
           mv $HOME/Android/Sdk/cmdline-tools/cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
-
-      # Step 4: Set Environment Variables for Android SDK
-      - name: Set Environment Variables for Android SDK
-        run: |
           export ANDROID_HOME=$HOME/Android/Sdk
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
 
-      # Step 5: Accept Android SDK Licenses
+      # Step 4: Accept Android SDK Licenses
       - name: Accept Android SDK Licenses
         run: |
-          yes | sdkmanager --licenses
+          export ANDROID_HOME=$HOME/Android/Sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+          yes | sdkmanager --licenses || echo "License acceptance failed, but continuing."
 
-      # Step 6: Cache Gradle Dependencies
+      # Step 5: Cache Gradle Dependencies
       - name: Cache Gradle Dependencies
         uses: actions/cache@v3
         with:
@@ -53,15 +51,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Step 7: Build and Run Unit Tests
+      # Step 6: Build and Run Unit Tests
       - name: Build and Run Unit Tests
         run: ./gradlew clean test
 
-      # Step 8: Build APKs
+      # Step 7: Build APKs
       - name: Build APK and Test APK
         run: ./gradlew assembleDebug assembleAndroidTest
 
-      # Step 9: Run Instrumented Tests on Emulator
+      # Step 8: Run Instrumented Tests on Emulator
       - name: Run instrumented tests on emulator
         uses: ReactiveCircus/android-emulator-runner@v2.34.0
         with:
@@ -76,7 +74,7 @@ jobs:
           emulator-boot-timeout: 600
           disable-animations: true
 
-      # Step 10: Archive Test Results
+      # Step 9: Archive Test Results
       - name: Archive Instrumented Test Results
         uses: actions/upload-artifact@v4.6.2
         with:

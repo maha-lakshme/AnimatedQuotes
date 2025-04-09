@@ -1,18 +1,18 @@
 name: CI Pipeline
 
 on:
-  workflow_dispatch: # Allows manual triggering from the Actions tab
+  workflow_dispatch:  # Allows manual trigger from the Actions tab
   push:
-    branches: [master]  # Automatically triggers on pushes to the master branch
+    branches: [master]  # Trigger on pushes to the master branch
   pull_request:
-    branches: [master]  # Automatically triggers on pull requests targeting the master branch
+    branches: [master]  # Trigger on PRs targeting the master branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository code
+      # Step 1: Checkout repository
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -23,7 +23,22 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # Step 3: Cache Gradle Dependencies
+      # Step 3: Install Android SDK Command-Line Tools
+      - name: Install Android SDK Command-Line Tools
+        run: |
+          mkdir -p $HOME/Android/Sdk
+          export ANDROID_HOME=$HOME/Android/Sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+          sdkmanager --install "cmdline-tools;latest" > /dev/null
+
+      # Step 4: Accept All Android SDK Licenses
+      - name: Accept Android SDK Licenses
+        run: |
+          export ANDROID_HOME=$HOME/Android/Sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+          yes | sdkmanager --licenses > /dev/null || echo "License acceptance failed, but continuing."
+
+      # Step 5: Cache Gradle Dependencies
       - name: Cache Gradle Dependencies
         uses: actions/cache@v3
         with:
@@ -34,38 +49,32 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Step 4: Build and Run Unit Tests
+      # Step 6: Build and Run Unit Tests
       - name: Build and Run Unit Tests
         run: ./gradlew clean test
 
-      - name: List Test Reports Directory
-        run: ls -la app/build/reports/tests/testDebugUnitTest
+      # Step 7: Build APKs
+      - name: Build APK and Test APK
+        run: ./gradlew assembleDebug assembleAndroidTest
 
-      # Step 5: Archive Unit Test Results
-      - name: Archive Unit Test Results
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: unit-test-report
-          path: app/build/reports/tests/testDebugUnitTest
-
-      # Step 5: Start Emulator and Run Tests
-      - name: Run Espresso Tests on Emulator
+      # Step 8: Run Instrumented Tests on Emulator
+      - name: Run instrumented tests on emulator
         uses: ReactiveCircus/android-emulator-runner@v2.34.0
         with:
-          api-level: 30                      # API level for emulator
-          target: 'default'                  # Default Android target system image
-          arch: x86                          # Emulator architecture
-          cores: 2                           # Number of CPU cores
-          avd-name: test                     # Name of the AVD
-          force-avd-creation: true           # Force creation of a new AVD
-          emulator-boot-timeout: 600         # Timeout for emulator boot in seconds
-          emulator-options: '-no-window -gpu swiftshader_indirect'  # Headless mode
-          disable-animations: true           # Disable animations for stability
-          script: ./gradlew connectedAndroidTest  # Command to run Espresso tests
+          api-level: 30
+          target: 'default'
+          emulator-options: '-no-window -gpu swiftshader_indirect'
+          script: ./gradlew connectedAndroidTest
+          arch: x86
+          cores: 2
+          avd-name: test
+          force-avd-creation: true
+          emulator-boot-timeout: 600
+          disable-animations: true
 
-#      # Step 7: Archive Instrumented Test Results
-#      - name: Archive Instrumented Test Results
-#        uses: actions/upload-artifact@v4.6.2
-#        with:
-#          name: instrumented-test-reports
-#          path: app/build/reports/androidTests/connected
+      # Step 9: Archive Test Results
+      - name: Archive Instrumented Test Results
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: instrumented-test-reports
+          path: app/build/reports/androidTests/connected

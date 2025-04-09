@@ -63,7 +63,10 @@ jobs:
           script: ./gradlew connectedAndroidTest
 
       - name: Terminate Emulator
+        shell: bash
+        continue-on-error: true
         run: |
+          set +e
           if adb devices | grep -q "emulator-5554"; then
             echo "Emulator found. Terminating..."
             adb -s emulator-5554 emu kill || echo "Termination command failed, but continuing."
@@ -71,6 +74,7 @@ jobs:
             echo "Emulator not found. Skipping termination."
           fi
           exit 0
+
 
 #
 #

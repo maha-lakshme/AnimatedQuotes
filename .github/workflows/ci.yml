@@ -1,11 +1,11 @@
 name: CI Pipeline
 
 on:
-  workflow_dispatch:  # Allows manual trigger from the Actions tab
+  workflow_dispatch:
   push:
-    branches: [master]  # Trigger on pushes to the master branch
+    branches: [master]
   pull_request:
-    branches: [master]  # Trigger on PRs targeting the master branch
+    branches: [master]
 
 jobs:
   build:
@@ -26,19 +26,23 @@ jobs:
       # Step 3: Install Android SDK Command-Line Tools
       - name: Install Android SDK Command-Line Tools
         run: |
-          mkdir -p $HOME/Android/Sdk
-          export ANDROID_HOME=$HOME/Android/Sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
-          sdkmanager --install "cmdline-tools;latest" > /dev/null
+          mkdir -p $HOME/Android/Sdk/cmdline-tools/latest
+          curl -o cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
+          unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools
+          mv $HOME/Android/Sdk/cmdline-tools/cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
 
-      # Step 4: Accept All Android SDK Licenses
-      - name: Accept Android SDK Licenses
+      # Step 4: Set Environment Variables for Android SDK
+      - name: Set Environment Variables for Android SDK
         run: |
           export ANDROID_HOME=$HOME/Android/Sdk
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
-          yes | sdkmanager --licenses > /dev/null || echo "License acceptance failed, but continuing."
 
-      # Step 5: Cache Gradle Dependencies
+      # Step 5: Accept Android SDK Licenses
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | sdkmanager --licenses
+
+      # Step 6: Cache Gradle Dependencies
       - name: Cache Gradle Dependencies
         uses: actions/cache@v3
         with:
@@ -49,15 +53,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Step 6: Build and Run Unit Tests
+      # Step 7: Build and Run Unit Tests
       - name: Build and Run Unit Tests
         run: ./gradlew clean test
 
-      # Step 7: Build APKs
+      # Step 8: Build APKs
       - name: Build APK and Test APK
         run: ./gradlew assembleDebug assembleAndroidTest
 
-      # Step 8: Run Instrumented Tests on Emulator
+      # Step 9: Run Instrumented Tests on Emulator
       - name: Run instrumented tests on emulator
         uses: ReactiveCircus/android-emulator-runner@v2.34.0
         with:
@@ -72,7 +76,7 @@ jobs:
           emulator-boot-timeout: 600
           disable-animations: true
 
-      # Step 9: Archive Test Results
+      # Step 10: Archive Test Results
       - name: Archive Instrumented Test Results
         uses: actions/upload-artifact@v4.6.2
         with:

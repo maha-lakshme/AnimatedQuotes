@@ -5,7 +5,7 @@ on:
   push:
     branches: [master]  # Automatically triggers on pushes to the master branch
   pull_request:
-    branches: [master] # Automatically triggers on pull requests targeting the master branch
+    branches: [master]  # Automatically triggers on pull requests targeting the master branch
 
 jobs:
   build:
@@ -33,7 +33,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-          
 
       # Step 4: Build and Run Unit Tests
       - name: Build and Run Unit Tests
@@ -49,11 +48,7 @@ jobs:
           name: unit-test-report
           path: app/build/reports/tests/testDebugUnitTest
 
-      # Step 6: Build and run Espresso Test
-#      - name: Build and Run Instrumented Test (Espresso)
-#        run: ./gradlew connectedAndroidTest
-
-      # This step uses the ReactiveCircus Android Emulator Runner to start an emulator.
+      # Step 6: Run Instrumented Tests (Espresso) on an Emulator
       - name: Run instrumented tests on emulator
         uses: ReactiveCircus/android-emulator-runner@v2.34.0
         with:
@@ -61,27 +56,21 @@ jobs:
           target: 'default'          # Use the default system image target
           emulator-options: '-no-window -gpu swiftshader_indirect'
           script: ./gradlew connectedAndroidTest
+          arch: x86
+          cores: 2
+          avd-name: test
+          force-avd-creation: true
+          emulator-boot-timeout: 600
+          emulator-port: 5554
+          disable-animations: true
+          disable-spellchecker: false
+          disable-linux-hw-accel: auto
+          enable-hw-keyboard: false
+          channel: stable
 
-      - name: Terminate Emulator
-        shell: bash
-        continue-on-error: true
-        run: |
-          set +e
-          if adb devices | grep -q "emulator-5554"; then
-            echo "Emulator found. Terminating..."
-            adb -s emulator-5554 emu kill || echo "Termination command failed, but continuing."
-          else
-            echo "Emulator not found. Skipping termination."
-          fi
-          exit 0
-
-
-#
-#
-#      # Step 7: Archive Espresso Test
-#      - name: Archive Instrumented Test Results
-#        uses: actions/upload-artifact@v4.6.2
-#        with:
-#          name: instrumented-test-reports
-#          path: app/build/reports/androidTests/connected
-
+      # Step 7: Archive Instrumented Test Results
+      - name: Archive Instrumented Test Results
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: instrumented-test-reports
+          path: app/build/reports/androidTests/connected

@@ -16,7 +16,7 @@ object RetrofitInstance {
         .addInterceptor(loggingInterceptor)
         .build()
     private const val PEXELS_BASE_URL = "https://api.pexels.com/v1/"
-    private const val QUOTES_BASE_URL = "https://quoteslate.vercel.app/"
+        private const val QUOTES_BASE_URL = "https://quoteslate.vercel.app/"
 
     private val pexelsRetrofit: Retrofit by lazy {
         Retrofit.Builder()

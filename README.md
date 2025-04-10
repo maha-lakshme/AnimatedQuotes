@@ -1,103 +1,112 @@
-# Animated Quotes App
+# AnimatedQuotes
 
-Animated Quotes App is an innovative Android application that fetches and displays inspiring quotes with smooth animations. Built with Kotlin in Android Studio and following the MVVM architectural pattern, the app leverages modern Jetpack components such as **LiveData** (for reactive data updates), **Data Binding** (for efficient UI-to-data connections), and **Retrofit** (for robust network communication). Extensive test suites—including unit tests, integration tests, and Espresso UI tests—ensure a reliable, high-quality user experience.
+AnimatedQuotes is an innovative Android application that delivers inspiring quotes paired with dynamic video backgrounds. The app retrieves quote data from a Quotes API and video content from the Pexels API, creating a multimedia experience designed to inspire. Built with Kotlin using Android Studio, AnimatedQuotes follows the MVVM architectural pattern and leverages Android Jetpack components such as Retrofit, LiveData, and Data Binding.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [API Integrations](#api-integrations)
+- [Testing](#testing)
+- [Continuous Integration](#continuous-integration)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ## Overview
 
-Animated Quotes App delivers motivating and inspiring quotes with eye-catching animations. The app follows the Model-View-ViewModel (MVVM) pattern to clearly separate the UI, business logic, and data handling layers. Modern Android development practices—such as LiveData for UI reactivity, Data Binding to reduce boilerplate code, and Retrofit for asynchronous API calls—ensure that your experience is both smooth and engaging.
+AnimatedQuotes is designed to provide users with a unique, multimedia inspirational experience. The app fetches motivational quotes from a dedicated Quotes API and pairs them with engaging video content from the Pexels API. With a clean MVVM structure, the application separates the UI, business logic, and data layers—ensuring maintainability and smooth, reactive user experiences.
 
 ## Features
 
-- **Dynamic Animated Quotes:**  
-  Visually appealing animations display a series of inspiring quotes to uplift users.
+- **Dynamic Inspirational Quotes:**  
+  Retrieve and display motivational quotes from a Quotes API.
 
-- **Reactive UI Updates:**  
-  LiveData automatically refreshes the UI upon data changes, ensuring that the display is always current.
+- **Engaging Video Backgrounds:**  
+  Fetch high-quality video content from the Pexels API to complement the quotes.
 
-- **Robust Networking:**  
-  Retrofit handles all API calls for fetching quotes, providing efficient and error-handled network communication.
+- **MVVM Architecture:**  
+  Cleanly separates the UI, business logic, and data layers for enhanced maintainability and testability.
+
+- **Reactive UI:**  
+  LiveData ensures that any changes in the data are automatically reflected in the UI.
 
 - **Efficient Data Binding:**  
-  Data Binding creates a direct connection between UI components and data sources, reducing the need for manual updates.
+  Uses Data Binding to reduce boilerplate and keep the UI code clean and maintainable.
 
-- **Comprehensive Test Coverage:**  
-  The project includes unit tests, integration tests, and Espresso UI tests to maintain a high standard of quality and reliability.
+- **Comprehensive Testing:**  
+  The project includes unit tests, integration tests, and Espresso UI tests to ensure functionality and reliability.
 
 ## Tech Stack
 
-- **Language:** Kotlin  
-- **Development Environment:** Android Studio  
-- **Architecture:** MVVM  
-- **UI Components:** Data Binding, LiveData, ViewModel, Material Design  
-- **Networking:** Retrofit  
-- **Testing Frameworks:**
-  - **Unit Testing:** JUnit, Mockito/MockK  
-  - **Integration Testing:** AndroidX Test framework  
-  - **UI Testing:** Espresso  
+- **Language:** Kotlin
+- **Architecture:** MVVM
+- **Networking:** Retrofit (for Quotes API and Pexels API)
+- **UI Components:** LiveData, Data Binding, ConstraintLayout, Material Design
+- **Testing:**
+  - *Unit Testing:* JUnit, Mockito/MockK
+  - *Integration Testing:* AndroidX Test framework
+  - *UI Testing:* Espresso
 - **Build Tool:** Gradle
+- **Continuous Integration:** GitHub Actions
 
 ## Architecture
 
-The application is organized using the Model-View-ViewModel (MVVM) pattern:
+The app is organized using the Model-View-ViewModel (MVVM) pattern:
 
 - **Model:**  
-  Contains data models (e.g., a `Quote` data class) and API response objects.
-
-- **View:**  
-  Comprises Activities and Fragments that render the UI using Data Binding, allowing seamless connections between the UI components and observable data.
+  Contains data classes representing quotes and video details, along with API response objects.
 
 - **ViewModel:**  
-  Serves as an intermediary that exposes LiveData to the UI while handling business logic independently from UI components.
+  Exposes LiveData streams to the UI and contains the business logic. It interacts with the Repository to fetch data.
+
+- **View:**  
+  Consists of Activities and Fragments that bind to the ViewModel using Data Binding, ensuring reactive updates to the UI.
 
 - **Repository:**  
-  Manages data operations, such as fetching quotes from remote APIs using Retrofit (and caching if needed).
+  Manages data operations by retrieving data from remote sources (Quotes API and Pexels API) via Retrofit, and handles any local caching if needed.
 
-- **Testing:**  
-  - **Unit Tests:** Validate ViewModel logic and Repository methods in isolation.  
-  - **Integration Tests:** Verify that different components interact correctly together.  
-  - **Espresso (UI) Tests:** Automate and confirm that user interactions produce the expected results.
+## API Integrations
 
-## Screenshots
+- **Quotes API:**  
+  Provides inspiring quotes in various categories. AnimatedQuotes fetches, parses, and displays these quotes to uplift users.
 
-Below are some screenshots showcasing the Animated Quotes App:
-
-<div align="center">
-  <img src="screenshots/screen1.png" alt="Home Screen - Animated Quotes" width="200px" />
-  <img src="screenshots/screen2.png" alt="Quote Detail Screen" width="200px" />
-  <img src="screenshots/screen3.png" alt="Animation in Action" width="200px" />
-</div>
-
-> **Note:**  
-> To ensure screenshots display correctly on GitHub:  
-> 1. Create a folder named `screenshots` in your repository.  
-> 2. Add your screenshot image files (e.g., `screen1.png`, `screen2.png`, etc.) into that folder.  
-> 3. Verify that the `<img>` tag paths (e.g., `screenshots/screen1.png`) correctly match the file names in your repository.
+- **Pexels API:**  
+  Supplies high-quality video content that serves as vivid, engaging backgrounds for the quotes.
 
 ## Testing
 
-The app is fully covered by a comprehensive suite of tests:
+AnimatedQuotes is fully covered by a comprehensive suite of tests:
 
 - **Unit Testing:**  
-  Validate core logic within the ViewModels and Repository:
+  Verifies the logic in ViewModels and Repository methods using JUnit and Mockito/MockK.
   ```bash
   ./gradlew testDebugUnitTest
   
-## Integration Testing: 
-Test the interactions between your ViewModel and Repository:
+- **Integration Testing:**
+Confirms that different components (e.g., ViewModel and Repository) interact seamlessly.
 
 bash
 ./gradlew connectedDebugAndroidTest
-## Espresso UI Testing: Run automated UI tests on an emulator or device:
+Espresso UI Testing: Automates UI tests to ensure the app’s user interactions perform as expected.
 
 bash
 ./gradlew connectedAndroidTest
-(Ensure an Android device or emulator is connected before running this command.)
+(Ensure that an Android emulator or device is connected before running these commands.)
 
-## Continuous Integration
-A Continuous Integration (CI) workflow is included via GitHub Actions. The workflow file, located at .github/workflows/ci.yml, automatically runs all tests (unit, integration, and Espresso UI) on every commit or pull request. This ensures every change meets quality and functionality standards.
+- **Continuous Integration:**
+A Continuous Integration (CI) workflow is included using GitHub Actions. The CI configuration, located at .github/workflows/ci.yml, automatically runs all tests (unit, integration, and Espresso UI) on every commit or pull request. This ensures that code quality remains high and that any new changes do not break existing functionality.
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for further details.
+- **Screenshots:**
+Here are some screenshots of AnimatedQuotes:
 
-## Contact
+<div align="center"> <img src="screenshots/screen1.png" alt="Home Screen" width="200px" />
+
+- **License:**
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+- **Contact:**
 Developer: Your Name Email: maha21.kanagaraj@gmail.com GitHub: github.com/maha-lakshme

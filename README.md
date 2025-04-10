@@ -2,20 +2,6 @@
 
 AnimatedQuotes is an innovative Android application that delivers inspiring quotes paired with dynamic video backgrounds. The app retrieves quote data from a Quotes API and video content from the Pexels API, creating a multimedia experience designed to inspire. Built with Kotlin using Android Studio, AnimatedQuotes follows the MVVM architectural pattern and leverages Android Jetpack components such as Retrofit, LiveData, and Data Binding.
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [API Integrations](#api-integrations)
-- [Testing](#testing)
-- [Continuous Integration](#continuous-integration)
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-
 ## Overview
 
 AnimatedQuotes is designed to provide users with a unique, multimedia inspirational experience. The app fetches motivational quotes from a dedicated Quotes API and pairs them with engaging video content from the Pexels API. With a clean MVVM structure, the application separates the UI, business logic, and data layers—ensuring maintainability and smooth, reactive user experiences.
@@ -89,12 +75,12 @@ AnimatedQuotes is fully covered by a comprehensive suite of tests:
 - **Integration Testing:**
 Confirms that different components (e.g., ViewModel and Repository) interact seamlessly.
   ```bash
-./gradlew connectedDebugAndroidTest
+  ./gradlew connectedDebugAndroidTest
 
 - **Espresso UI Testing:**
  Automates UI tests to ensure the app’s user interactions perform as expected.
   ```bash
-./gradlew connectedAndroidTest
+  ./gradlew connectedAndroidTest
 (Ensure that an Android emulator or device is connected before running these commands.)
 
 - **Continuous Integration:**

@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             println("BY RANGE-------"+quotes)
         }
         // Load data.
-        viewModel.loadVideos("motivation")
+        viewModel.loadVideos("nature")
         viewModel.loadQuotes()
         viewModel.getQuotesByRange()
     }

@@ -1,12 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
         <!-- Declare a variable for VideoQuoteItem -->
         <variable
             name="item"
             type="com.maha.animatedquotes.ui.view.VideoQuoteItem" />
     </data>
-    <!-- Use a FrameLayout to overlay text on top of the video player -->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,17 +22,21 @@
             android:layout_gravity="center"
             app:surface_type="texture_view"
             android:background="#000000"
-            app:use_controller="false"
+            app:use_controller="false" />
 
-           />
+        <!-- Semi-transparent overlay to darken the video and brighten the text -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#88000000" />
+
         <!-- Overlay container with Quote and Author -->
         <LinearLayout
             android:id="@+id/overlay_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
             android:orientation="vertical"
             android:gravity="center"
-            android:elevation="5dp"
             android:background="@android:color/transparent">
 
             <TextView
@@ -39,9 +45,10 @@
                 android:layout_height="wrap_content"
                 android:text="Your Quote"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:background="#80000000"
-                android:padding="8dp" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:padding="12dp" />
 
             <TextView
                 android:id="@+id/tvAuthor"
@@ -49,8 +56,9 @@
                 android:layout_height="wrap_content"
                 android:text="Author"
                 android:textColor="#FFFFFF"
-                android:background="#80000000"
-                android:padding="6dp" />
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:layout_marginTop="4dp" />
         </LinearLayout>
     </FrameLayout>
 </layout>

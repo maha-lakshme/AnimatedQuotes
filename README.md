@@ -89,7 +89,7 @@ A Continuous Integration (CI) workflow is included using GitHub Actions. The CI 
 - **Screenshots:**
 Here are some screenshots of AnimatedQuotes:
 
-<div align="center"> <img src="screenshots/screen1.png" alt="Home Screen" width="200px" />
+<div align="center"> <img src="screenshots/screen1.png" alt="Home Screen" width="200px" /></div>
 
 - **License:**
 This project is licensed under the MIT License. See the LICENSE file for details.

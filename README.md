@@ -88,12 +88,12 @@ AnimatedQuotes is fully covered by a comprehensive suite of tests:
   
 - **Integration Testing:**
 Confirms that different components (e.g., ViewModel and Repository) interact seamlessly.
-
-bash
+  ```bash
 ./gradlew connectedDebugAndroidTest
-Espresso UI Testing: Automates UI tests to ensure the app’s user interactions perform as expected.
 
-bash
+- **Espresso UI Testing:**
+ Automates UI tests to ensure the app’s user interactions perform as expected.
+  ```bash
 ./gradlew connectedAndroidTest
 (Ensure that an Android emulator or device is connected before running these commands.)
 
